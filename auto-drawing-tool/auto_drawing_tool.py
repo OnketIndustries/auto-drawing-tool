@@ -56,11 +56,12 @@ def goBlRender():
     bpy.context.scene.render.engine = 'BLENDER_RENDER'
 
 # Add pure white material on object.
+import bpy
+
 def makeMaterial():
     # Make material.
-    mat_name = 'Auto-drawing'
-    bpy.data.materials.new(mat_name)
-    mat = bpy.data.materials[mat_name]
+    bpy.ops.material.new()
+    mat = bpy.data.materials[-1]
 
     # Remove all in material slot and append the new material.
     for m in bpy.context.object.data.materials:
