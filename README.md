@@ -57,6 +57,7 @@ Change order for build modifier by sorting index of face.
 * "VIEW_XAXIS" = Sort along with X axis.
 * "SELECTED" = Sort from selected face.
 * "MATERIAL" = Sort by material.
+---
 
 
 ##Todo List
