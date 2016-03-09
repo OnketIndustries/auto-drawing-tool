@@ -33,6 +33,19 @@ You can turn on or off each settings for auto drawing.
 4. Pure White World.
 5. Subsurf Modifier.
 
+#### Line Thickness
+Change line thickness of Freestyle.
+
+#### Freestyle Preset
+Change the line style by Freestyle preset.
+
+* "NONE" = Default setting of Freetyle.
+* "MARKER_PEN" = Bolder line.
+* "BRUSH_PEN" = Different line thickness from start to end.
+* "SCRIBBLE" = Rough line.
+* "FREE_HAND" = Rough line and rough shape.
+* "CHILDISH" = More rough like child's drawing.
+
 #### Change Drawing Order
 Change order for build modifier by sorting index of face.
 
@@ -44,13 +57,3 @@ Change order for build modifier by sorting index of face.
 * "VIEW_XAXIS" = Sort along with X axis.
 * "SELECTED" = Sort from selected face.
 * "MATERIAL" = Sort by material.
-
-#### Freestyle Preset
-Change the line style by freestyle preset.
-
-* "NONE" = Default setting of freetyle.
-* "MARKER_PEN" = Bolder line.
-* "BRUSH_PEN" = Different line thickness from start to end.
-* "SCRIBBLE" = Rough line.
-* "FREE_HAND" = Rough line and rough shape.
-* "CHILDISH" = More rough like child's drawing.
