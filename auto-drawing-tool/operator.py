@@ -51,7 +51,7 @@ class AutoDrawOperation(bpy.types.Operator):
                 ('CHILDISH', 'CHILDISH', "Locate on 3D cursor")]
     )
     sort_select = bpy.props.EnumProperty(
-        name = "Drawing Order(Only for MESH)",
+        name = "Change Drawing Order(Only for MESH)",
         description = "Sort faces of mesh for build modifier.",
         items = [('NONE', 'NONE', "Locate on 3D cursor"),
                 ('REVERSE', 'REVERSE', "Locate on 3D cursor"),

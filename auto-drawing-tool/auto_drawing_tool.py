@@ -38,7 +38,7 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
         pass
     
     # Apply a freestyle setting.
-    if freestyle_preset != None or 'NONE':
+    if freestyle_preset != None:
         setFreestylePreset(freestyle_preset)
     
     # Change line thickness.
@@ -118,38 +118,90 @@ def cameraViewSort():
 
 # Set a freestyle preset.
 def setFreestylePreset(freestyle_preset):
+    linestyle = bpy.data.linestyles["LineStyle"]
+    
+    # NONE.
+    if freestyle_preset == 'NONE':
+        disableFreestyleModifiers()
+
+    # MERKER_PEN.
     if freestyle_preset == 'MARKER_PEN':
-        bpy.context.scene.render.line_thickness = 2 
-        bpy.ops.scene.freestyle_color_modifier_add(type='ALONG_STROKE')
-        bpy.data.linestyles['LineStyle'].color_modifiers['Along Stroke'].color_ramp.elements[0].position = 0.752
-        bpy.data.linestyles['LineStyle'].color_modifiers['Along Stroke'].color_ramp.elements[1].color = (0.156, 0.156, 0.156, 1)
-
+        disableFreestyleModifiers()
+        
+        if 'Along Stroke' not in linestyle.color_modifiers.keys():
+            bpy.ops.scene.freestyle_color_modifier_add(type='ALONG_STROKE')
+        linestyle.color_modifiers['Along Stroke'].use = True
+        linestyle.color_modifiers['Along Stroke'].color_ramp.elements[0].position = 0.752
+        linestyle.color_modifiers['Along Stroke'].color_ramp.elements[1].color = (0.156, 0.156, 0.156, 1)
+    
+    # BRUSH_PEN.
     if freestyle_preset == 'BRUSH_PEN':
-        bpy.context.scene.render.line_thickness = 2
-        bpy.ops.scene.freestyle_thickness_modifier_add(type='ALONG_STROKE')
-        bpy.data.linestyles['LineStyle'].thickness_modifiers['Along Stroke'].value_min = 0.7
-        bpy.data.linestyles['LineStyle'].thickness_modifiers['Along Stroke'].value_max = 3
+        disableFreestyleModifiers()
+        
+        if 'Along Stroke' not in linestyle.thickness_modifiers.keys():
+            bpy.ops.scene.freestyle_thickness_modifier_add(type='ALONG_STROKE')
+        linestyle.thickness_modifiers['Along Stroke'].use = True
+        linestyle.thickness_modifiers['Along Stroke'].value_min = 0.7
+        linestyle.thickness_modifiers['Along Stroke'].value_max = 3
     
+    # SCRIBBLE.
     if freestyle_preset == 'SCRIBBLE':
-        bpy.context.scene.render.line_thickness = 2
-        bpy.ops.scene.freestyle_thickness_modifier_add(type='ALONG_STROKE')
-        bpy.data.linestyles['LineStyle'].thickness_modifiers['Along Stroke'].value_min = 0.7
-        bpy.data.linestyles['LineStyle'].thickness_modifiers['Along Stroke'].value_max = 3
-        bpy.ops.scene.freestyle_geometry_modifier_add(type='2D_OFFSET')
-        bpy.data.linestyles['LineStyle'].geometry_modifiers['2D Offset'].end = 4
-
-    if freestyle_preset == 'FREE_HAND':
-        bpy.ops.scene.freestyle_thickness_modifier_add(type='CALLIGRAPHY')
-        bpy.data.linestyles['LineStyle'].thickness_modifiers['Calligraphy'].thickness_max = 7
-        bpy.ops.scene.freestyle_geometry_modifier_add(type='POLYGONIZATION')
-        bpy.data.linestyles['LineStyle'].geometry_modifiers['Polygonalization'].error = 3
+        disableFreestyleModifiers()
+        
+        if 'Along Stroke' not in linestyle.thickness_modifiers.keys():
+            bpy.ops.scene.freestyle_thickness_modifier_add(type='ALONG_STROKE')
+        linestyle.thickness_modifiers['Along Stroke'].use = True
+        linestyle.thickness_modifiers['Along Stroke'].value_min = 0.7
+        linestyle.thickness_modifiers['Along Stroke'].value_max = 3
+        
+        if '2D Offset' not in linestyle.geometry_modifiers.keys():
+            bpy.ops.scene.freestyle_geometry_modifier_add(type='2D_OFFSET')
+        linestyle.geometry_modifiers['2D Offset'].use = True
+        linestyle.geometry_modifiers['2D Offset'].end = 4
     
+    # FREE_HAND.
+    if freestyle_preset == 'FREE_HAND':
+        disableFreestyleModifiers()
+        
+        if 'Calligraphy' not in linestyle.thickness_modifiers.keys():
+            bpy.ops.scene.freestyle_thickness_modifier_add(type='CALLIGRAPHY')
+        linestyle.thickness_modifiers['Calligraphy'].use = True
+        linestyle.thickness_modifiers['Calligraphy'].thickness_max = 7
+        
+        if 'Polygonalization' not in linestyle.geometry_modifiers.keys():
+            bpy.ops.scene.freestyle_geometry_modifier_add(type='POLYGONIZATION')
+        linestyle.geometry_modifiers['Polygonalization'].use = True
+        linestyle.geometry_modifiers['Polygonalization'].error = 3
+    
+    # CHILDISH.
     if freestyle_preset == 'CHILDISH':
-        bpy.ops.scene.freestyle_thickness_modifier_add(type='CALLIGRAPHY')
-        bpy.data.linestyles['LineStyle'].thickness_modifiers['Calligraphy'].thickness_max = 10
-        bpy.ops.scene.freestyle_color_modifier_add(type='ALONG_STROKE')
-        bpy.data.linestyles['LineStyle'].color_modifiers['Along Stroke'].color_ramp.elements[1].color = (0.128, 0.128, 0.128, 1)
-        bpy.ops.scene.freestyle_geometry_modifier_add(type='POLYGONIZATION')
-        bpy.data.linestyles['LineStyle'].geometry_modifiers['Polygonalization'].error = 5
-        bpy.ops.scene.freestyle_geometry_modifier_add(type='BACKBONE_STRETCHER')
-        bpy.data.linestyles['LineStyle'].geometry_modifiers['Backbone Stretcher'].backbone_length = 3
+        disableFreestyleModifiers()
+        
+        if 'Calligraphy' not in linestyle.thickness_modifiers.keys():
+            bpy.ops.scene.freestyle_thickness_modifier_add(type='CALLIGRAPHY')
+        linestyle.thickness_modifiers['Calligraphy'].use = True
+        linestyle.thickness_modifiers['Calligraphy'].thickness_max = 10
+        
+        if 'Along Stroke' not in linestyle.color_modifiers.keys():
+            bpy.ops.scene.freestyle_color_modifier_add(type='ALONG_STROKE')
+        linestyle.color_modifiers['Along Stroke'].use = True
+        linestyle.color_modifiers['Along Stroke'].color_ramp.elements[1].color = (0.128, 0.128, 0.128, 1)
+        
+        if 'Polygonalization' not in linestyle.geometry_modifiers.keys():
+            bpy.ops.scene.freestyle_geometry_modifier_add(type='POLYGONIZATION')
+        linestyle.geometry_modifiers['Polygonalization'].use = True
+        linestyle.geometry_modifiers['Polygonalization'].error = 5
+        
+        if 'Backbone Stretcher' not in linestyle.geometry_modifiers.keys():
+            bpy.ops.scene.freestyle_geometry_modifier_add(type='BACKBONE_STRETCHER')
+        linestyle.geometry_modifiers['Backbone Stretcher'].use = True
+        linestyle.geometry_modifiers['Backbone Stretcher'].backbone_length = 3
+
+# Turn off Freestyle Modifiers.
+def disableFreestyleModifiers():
+    for modifier in bpy.data.linestyles["LineStyle"].thickness_modifiers:
+        modifier.use = False
+    for modifier in bpy.data.linestyles["LineStyle"].geometry_modifiers:
+        modifier.use = False
+    for modifier in bpy.data.linestyles["LineStyle"].color_modifiers:
+        modifier.use = False
