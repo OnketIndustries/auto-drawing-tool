@@ -23,30 +23,30 @@ Option setting panel coms in bottom left of 3D view, after click "Set Auto Drawi
 
 ###Enable/Disable process
 You can turn on or off each settings for auto drawing.
-1.Buld Modifier & Freestyle.
-2.Blender Render.
-3.Pure White Material.
-4.Pure White World.
-5.Subsurf Modifier.
+1. Buld Modifier & Freestyle.
+2. Blender Render.
+3. Pure White Material.
+4. Pure White World.
+5. Subsurf Modifier.
 
 ### Change Drawing Order
 Change order for build modifier by sorting index of face.
 
-"NONE" = Default index of face for the object.
-"REVERSE" = Reveres the order of default index.
-"CURSOR_DISTANCE" = Sort from nearest face to cursor.
-"CAMERA" = Sort from nearest face to camera.
-"VIEW_ZAXIS" = Sort along with Z axis.
-"VIEW_XAXIS" = Sort along with X axis.
-"SELECTED" = Sort from selected face.
-"MATERIAL" = Sort by material.
+* "NONE" = Default index of face for the object.
+* "REVERSE" = Reveres the order of default index.
+* "CURSOR_DISTANCE" = Sort from nearest face to cursor.
+* "CAMERA" = Sort from nearest face to camera.
+* "VIEW_ZAXIS" = Sort along with Z axis.
+* "VIEW_XAXIS" = Sort along with X axis.
+* "SELECTED" = Sort from selected face.
+* "MATERIAL" = Sort by material.
 
 ### Freestyle Preset
 Change the line style by freestyle preset.
 
-"NONE" = Default setting of freetyle.
-"MARKER PEN" = Bolder line.
-"BRUSH_PEN" = Different thickness line from start to end.
-"SCRIBBLE" = Rough line.
-"FREE_HAND" = Rough line and rough shape.
-"CHILDISH" = More rough like child's drawing.
+* "NONE" = Default setting of freetyle.
+* "MARKER PEN" = Bolder line.
+* "BRUSH_PEN" = Different thickness line from start to end.
+* "SCRIBBLE" = Rough line.
+* "FREE_HAND" = Rough line and rough shape.
+* "CHILDISH" = More rough like child's drawing.
