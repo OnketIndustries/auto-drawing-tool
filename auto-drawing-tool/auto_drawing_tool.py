@@ -3,7 +3,7 @@ import bpy
 # Main function.
 def autoDraw(frame_range=None, basic=None, bl_render=None,
              material=None, world=None, modifier=None,
-             sort=None, freestyle_preset=None):
+             sort=None, freestyle_preset=None, line_thick=None):
     
     # Default value is [1,100].
     if frame_range == None:
@@ -45,6 +45,11 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
     
     # Apply a freestyle setting.
     setFreestylePreset(freestyle_preset)
+    
+    # Change line thickness.
+    if line_thick == None:
+        line_thick = 2
+    bpy.context.scene.render.line_thickness = line_thick
 
 
 # Set length of animation frame as end frame of build modifier.

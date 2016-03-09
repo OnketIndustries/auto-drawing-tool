@@ -35,6 +35,21 @@ class AutoDrawOperation(bpy.types.Operator):
         description = "Apply subdivision surface.",
         default = False
     )
+    line_thick_float = bpy.props.FloatProperty(
+        name = "Line Thickness",
+        description = "Set line thickness.",
+        default = 2
+    )
+    freestyle_select = bpy.props.EnumProperty(
+        name = "Freestyle Preset",
+        description = "Set Freestyle Preset",
+        items = [('NONE', 'NONE', "Locate on 3D cursor"),
+                ('MARKER_PEN', 'MARKER_PEN', "Locate on 3D cursor"),
+                ('BRUSH_PEN', 'BRUSH_PEN', "Locate on 3D cursor"),
+                ('SCRIBBLE', 'SCRIBBLE', "Locate on 3D cursor"),
+                ('FREE_HAND', 'FREE_HAND', "Locate on 3D cursor"),
+                ('CHILDISH', 'CHILDISH', "Locate on 3D cursor")]
+    )
     sort_select = bpy.props.EnumProperty(
         name = "Change Drawing Order",
         description = "Sort faces for build modifier.",
@@ -46,16 +61,6 @@ class AutoDrawOperation(bpy.types.Operator):
                 ('VIEW_XAXIS', 'VIEW_XAXIS', "Locate on 3D cursor"),
                 ('SELECTED', 'SELECTED', "Locate on 3D cursor"),
                 ('MATERIAL', 'MATERIAL', "Locate on 3D cursor")]
-    )
-    freestyle_select = bpy.props.EnumProperty(
-        name = "Freestyle Preset",
-        description = "Set Freestyle Preset",
-        items = [('NONE', 'NONE', "Locate on 3D cursor"),
-                ('MARKER_PEN', 'MARKER_PEN', "Locate on 3D cursor"),
-                ('BRUSH_PEN', 'BRUSH_PEN', "Locate on 3D cursor"),
-                ('SCRIBBLE', 'SCRIBBLE', "Locate on 3D cursor"),
-                ('FREE_HAND', 'FREE_HAND', "Locate on 3D cursor"),
-                ('CHILDISH', 'CHILDISH', "Locate on 3D cursor")]
     )
     # -----------------------------------------
 
@@ -71,7 +76,7 @@ class AutoDrawOperation(bpy.types.Operator):
         auto_drawing_tool.autoDraw(frame_range=[sce.draw_start_frame, sce.draw_end_frame],
              basic=self.basic_check, bl_render=self.blrender_check,
              material=self.material_check, world=self.world_check, modifier=self.modifier_check,
-             sort=self.sort_select, freestyle_preset=self.freestyle_select)
+             sort=self.sort_select, freestyle_preset=self.freestyle_select, line_thick=self.line_thick_float)
         
         # Finish at end frame.
         bpy.context.scene.frame_current = sce.draw_end_frame
