@@ -48,8 +48,9 @@ Change the line style by Freestyle preset.
 * "FREE_HAND" = Rough line and rough shape.
 * "CHILDISH" = More rough like child's drawing.
 
-#### Change Drawing Order
+#### Drawing Order(Only for MESH)
 Change order for build modifier by sorting index of face.
+It affects only on MESH objects.
 
 * "NONE" = Default index of face for the object.
 * "REVERSE" = Reveres the order of default index.

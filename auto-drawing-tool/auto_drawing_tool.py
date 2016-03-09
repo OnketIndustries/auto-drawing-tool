@@ -102,10 +102,12 @@ def addModifiers():
 # Sort order of faces for build modifier.
 def changeSort(sort_type=None):
     sort_type_values = ['VIEW_ZAXIS', 'VIEW_XAXIS', 'MATERIAL', 'CURSOR_DISTANCE', 'SELECTED', 'RANDOMIZE', 'REVERSE']
-    
-    bpy.ops.object.mode_set(mode='EDIT')
-    bpy.ops.mesh.sort_elements(type=sort_type, elements={'FACE'})
-    bpy.ops.object.mode_set(mode='OBJECT')
+    if bpy.context.object.type == 'MESH':
+        bpy.ops.object.mode_set(mode='EDIT')
+        bpy.ops.mesh.sort_elements(type=sort_type, elements={'FACE'})
+        bpy.ops.object.mode_set(mode='OBJECT')
+    else:
+        print("Cannot sort except MESH object!")
 
 # Sort method by distance from camera.
 def cameraViewSort():
