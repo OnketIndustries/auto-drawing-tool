@@ -12,10 +12,10 @@
 
 if "bpy" in locals():
     import imp
-    imp.reload(operate)
+    imp.reload(operator)
 
 else:
-    from . import operate
+    from . import operator
 
 import bpy
 
