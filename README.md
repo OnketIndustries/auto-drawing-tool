@@ -7,6 +7,7 @@ A blender's add-on: Freestyle with build modifier.
 1. Download the [zip file](https://github.com/squarednob/auto-drawing-tool/raw/master/auto-drawing-tool.zip).
 2. In Blender, go to File > Use Preferences > Add-ons, click "Install from file", and select the zip file.
 3. Activate "Animation: Auto Drawing Tool" in Animation category.
+
 ---
 
 
@@ -17,6 +18,7 @@ A blender's add-on: Freestyle with build modifier.
 2. Go to toolshelf on the left of 3D view. In Animation tab, there is "Auto Drawing Tool" box.
 3. Set start frame and end frame for animation, then click on "Set Auto Drawing" button.
 4. Render animation.
+
 ---
 
 
@@ -57,6 +59,7 @@ Change order for build modifier by sorting index of face.
 * "VIEW_XAXIS" = Sort along with X axis.
 * "SELECTED" = Sort from selected face.
 * "MATERIAL" = Sort by material.
+
 ---
 
 
