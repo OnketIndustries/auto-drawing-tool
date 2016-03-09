@@ -21,8 +21,9 @@ A blender's add-on: Freestyle with build modifier.
 ---
 
 ## Options
-Option setting panel comes in bottom left of 3D view, after click "Set Auto Drawing" button.
 ![auto-drawing-tool_tutorial_options1](./src/auto-drawing-tool_tutorial_options1.png)
+
+Option setting panel comes in bottom left of 3D view, after click "Set Auto Drawing" button.
 ####Enable/Disable process
 You can turn on or off each settings for auto drawing.
 
