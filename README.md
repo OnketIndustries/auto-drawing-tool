@@ -1,4 +1,4 @@
-# auto-drawing-tool
+# Auto Drawing Tool
 A blender's add-on: Freestyle with build modifier.
 
 ---
