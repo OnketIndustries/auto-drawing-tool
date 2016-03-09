@@ -1,8 +1,6 @@
 # Auto Drawing Tool
 A blender's add-on: Freestyle with build modifier.
 
----
-
 ## Installation
 1. Download the [zip file](https://github.com/squarednob/auto-drawing-tool/raw/master/auto-drawing-tool.zip).
 2. In Blender, go to File > Use Preferences > Add-ons, click "Install from file", and select the zip file.
