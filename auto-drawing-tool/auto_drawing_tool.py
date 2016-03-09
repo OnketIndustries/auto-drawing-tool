@@ -11,15 +11,9 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
     else:
         frame_range = frame_range
     
-    # Activate build modifier and freestyle.
+    # Turn on/off each step--------------------
     if basic == True:
-        bpy.ops.object.modifier_add(type='BUILD')
-        # Frame duration is end frame - start frame.
-        bpy.context.object.modifiers['Build'].frame_start = frame_range[0]
-        bpy.context.object.modifiers['Build'].frame_duration = frame_range[1] - frame_range[0]
-        changeEndFrame(frame_range)
-        # Activate freestyle.
-        bpy.context.scene.render.use_freestyle = True
+        addBuildFreestyle(frame_range)
     
     if bl_render == True:
         goBlRender()
@@ -44,13 +38,28 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
         pass
     
     # Apply a freestyle setting.
-    setFreestylePreset(freestyle_preset)
+    if freestyle_preset != None or 'NONE':
+        setFreestylePreset(freestyle_preset)
     
     # Change line thickness.
     if line_thick == None:
         line_thick = 2
     bpy.context.scene.render.line_thickness = line_thick
 
+# Activate build modifier and freestyle.
+def addBuildFreestyle(frame_range):
+    # if Build modifier is absent, add it.
+    if 'Build_auto-drawing' not in bpy.context.object.modifiers.keys():
+        bpy.ops.object.modifier_add(type='BUILD')
+        bpy.context.object.modifiers[-1].name = 'Build_auto-drawing'
+
+    # Frame duration is end frame - start frame.
+    bpy.context.object.modifiers['Build_auto-drawing'].frame_start = frame_range[0]
+    bpy.context.object.modifiers['Build_auto-drawing'].frame_duration = frame_range[1] - frame_range[0]
+    changeEndFrame(frame_range)
+    
+    # Activate freestyle.
+    bpy.context.scene.render.use_freestyle = True
 
 # Set length of animation frame as end frame of build modifier.
 def changeEndFrame(frame_range):
@@ -61,8 +70,6 @@ def goBlRender():
     bpy.context.scene.render.engine = 'BLENDER_RENDER'
 
 # Add pure white material on object.
-import bpy
-
 def makeMaterial():
     # Make material.
     bpy.ops.material.new()
@@ -84,7 +91,13 @@ def makeWorld():
 
 # Apply preset modifier.
 def addModifiers():
+    # if subsurf modifier already exists, remove it.
+    if 'Subsurf_auto-drawing' in bpy.context.object.modifiers.keys():
+        bpy.ops.object.modifier_remove(modifier='Subsurf_auto-drawing')
+    
+    # Already add it at the end of modifeir stack.
     bpy.ops.object.modifier_add(type='SUBSURF')
+    bpy.context.object.modifiers[-1].name = 'Subsurf_auto-drawing'
 
 # Sort order of faces for build modifier.
 def changeSort(sort_type=None):
