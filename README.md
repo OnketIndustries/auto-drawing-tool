@@ -2,6 +2,8 @@
 A blender's add-on: Freestyle with build modifier.
 
 ## Installation
+![auto-drawing-tool_tutorial_install1](https://github.com/squarednob/auto-drawing-tool/blob/master/src/auto-drawing-tool_tutorial_install1.png "auto-drawing-tool_tutorial_install1”)
+
 1. Download the [zip file](https://github.com/squarednob/auto-drawing-tool/raw/master/auto-drawing-tool.zip).
 2. In Blender, go to File > Use Preferences > Add-ons, click "Install from file", and select the zip file.
 3. Activate "Animation: Auto Drawing Tool" in Animation category.
@@ -9,6 +11,8 @@ A blender's add-on: Freestyle with build modifier.
 ---
 
 ## Basic Usage
+![auto-drawing-tool_tutorial_toolshelf1](https://github.com/squarednob/auto-drawing-tool/blob/master/src/auto-drawing-tool_tutorial_toolshelf1.png "auto-drawing-tool_tutorial_toolshelf1”)
+
 1. Select an object.
 2. Go to toolshelf on the left of 3D view. In Animation tab, there is "Auto Drawing Tool" box.
 3. Set start frame and end frame for animation, then click on "Set Auto Drawing" button.
@@ -18,7 +22,7 @@ A blender's add-on: Freestyle with build modifier.
 
 ## Options
 Option setting panel comes in bottom left of 3D view, after click "Set Auto Drawing" button.
-
+![auto-drawing-tool_tutorial_options1](https://github.com/squarednob/auto-drawing-tool/blob/master/src/auto-drawing-tool_tutorial_options1.png "auto-drawing-tool_tutorial_options1”)
 ####Enable/Disable process
 You can turn on or off each settings for auto drawing.
 
