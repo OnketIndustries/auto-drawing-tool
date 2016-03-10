@@ -67,3 +67,4 @@ It affects only on MESH objects.
 ##Todo List
 * Change drawing order for text object.
 * Vanish line on internal faces during building animation.
+* Link color between world and material.
