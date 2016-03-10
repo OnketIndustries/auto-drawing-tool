@@ -31,8 +31,8 @@ You can turn on or off each settings for auto drawing.
 
 1. Buld Modifier & Freestyle.
 2. Blender Render.
-3. Pure White Material.
-4. Pure White World.
+3. Pure White World.
+4. Pure White Material.
 5. Subsurf Modifier.
 
 #### Line Thickness
