@@ -21,12 +21,12 @@ class AutoDrawOperation(bpy.types.Operator):
         default = True
     )
     world_check = bpy.props.BoolProperty(
-        name = "4.Pure White World",
+        name = "3.Apply White World",
         description = "Set white world for Blender render",
         default = True
     )
     material_check = bpy.props.BoolProperty(
-        name = "3.Pure White Material",
+        name = "4.Apply White Shadeless Material",
         description = "Set shadeless white material.",
         default = True
     )
