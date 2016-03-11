@@ -3,7 +3,7 @@
 A Blender add-on to make drawing video by Freestyle with build modifier.
 
 ## Links
-Turorial video: [Blender Add-on "Auto Drawing Tool": Tutorial](https://www.youtube.com/watch?v=girbIZIbGEc).
+Turorial video: [Blender Add-on Tutorial "Auto Drawing Tool"](https://www.youtube.com/watch?v=girbIZIbGEc).
 
 ## Installation
 ![auto-drawing-tool_tutorial_install1](./src/auto-drawing-tool_tutorial_install1.png)
