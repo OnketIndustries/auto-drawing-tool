@@ -71,6 +71,12 @@ It affects only on MESH objects.
 ---
 
 
+## Versions
+###v0.2.1:
+1. It now can work for multiple selected objects.
+2. End frame remains if it is longer than auto drawing's end frame.
+3. Objects other than mesh, curve, or text will be ignored.
+
 ##Todo List
 * Change drawing order for text object.
 * Vanish line on internal faces during building animation.
