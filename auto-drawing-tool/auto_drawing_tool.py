@@ -71,7 +71,8 @@ def addBuildFreestyle(frame_range):
 
 # Set length of animation frame as end frame of build modifier.
 def changeEndFrame(frame_range):
-    bpy.context.scene.frame_end = frame_range[1]
+    if frame_range[1] > bpy.context.scene.frame_end:
+        bpy.context.scene.frame_end = frame_range[1]
 
 # Change rendering engine into Blender render.
 def goBlRender():
