@@ -23,7 +23,7 @@ import bpy
 bl_info = {
     "name": "Auto Drawing Tool",
     "author": "Nobuyuki Hirakata",
-    "version": (0, 2, 0),
+    "version": (0, 2, 1),
     "blender": (2, 76, 0),
     "location": "View3D > Toolshelf > Animation tab",
     "description": "Make auto-drawing setting using Build modifier and Freestyle.",
