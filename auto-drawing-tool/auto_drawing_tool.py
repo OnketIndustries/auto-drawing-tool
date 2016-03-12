@@ -12,47 +12,49 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
         bpy.ops.object.select_all(action='DESELECT')
         selected_object.select = True
         bpy.context.scene.objects.active = selected_object
+        
+        # Only work for mesh, curve, or text.
+        if bpy.context.object.type in ['MESH','CURVE','FONT']:
+            # Default value is [1,100].
+            if frame_range == None:
+                frame_range = [1, 100]
+            else:
+                frame_range = frame_range
+    
+            # Turn on/off each step--------------------
+            if basic == True:
+                addBuildFreestyle(frame_range)
+    
+            if bl_render == True:
+                goBlRender()
 
-        # Default value is [1,100].
-        if frame_range == None:
-            frame_range = [1, 100]
-        else:
-            frame_range = frame_range
-    
-        # Turn on/off each step--------------------
-        if basic == True:
-            addBuildFreestyle(frame_range)
-    
-        if bl_render == True:
-            goBlRender()
+            if material == True:
+                makeMaterial()
 
-        if material == True:
-            makeMaterial()
+            if world == True:
+                makeWorld()
 
-        if world == True:
-            makeWorld()
-
-        if modifier == True:
-            addModifiers()
+            if modifier == True:
+                addModifiers()
     
-        # Sort faces for order of build modifier.
-        if sort == 'CAMERA':
-            cameraViewSort()
-        elif sort in ['VIEW_ZAXIS', 'VIEW_XAXIS', 'MATERIAL', 'CURSOR_DISTANCE', 'SELECTED', 'RANDOMIZE', 'REVERSE']:
-            changeSort(sort)
-        elif sort == 'NONE':
-            pass
-        else:
-            pass
+            # Sort faces for order of build modifier.
+            if sort == 'CAMERA':
+                cameraViewSort()
+            elif sort in ['VIEW_ZAXIS', 'VIEW_XAXIS', 'MATERIAL', 'CURSOR_DISTANCE', 'SELECTED', 'RANDOMIZE', 'REVERSE']:
+                changeSort(sort)
+            elif sort == 'NONE':
+                pass
+            else:
+                pass
     
-        # Apply a freestyle setting.
-        if freestyle_preset != None:
-            setFreestylePreset(freestyle_preset)
+            # Apply a freestyle setting.
+            if freestyle_preset != None:
+                setFreestylePreset(freestyle_preset)
     
-        # Change line thickness.
-        if line_thick == None:
-            line_thick = 2
-        bpy.context.scene.render.line_thickness = line_thick
+            # Change line thickness.
+            if line_thick == None:
+                line_thick = 2
+            bpy.context.scene.render.line_thickness = line_thick
 
 # Activate build modifier and freestyle.
 def addBuildFreestyle(frame_range):
