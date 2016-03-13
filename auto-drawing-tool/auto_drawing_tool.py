@@ -126,6 +126,7 @@ def cameraViewSort():
     cam = bpy.data.objects[bpy.data.cameras[0].name]
     bpy.context.scene.cursor_location = cam.location
     changeSort(sort_type='CURSOR_DISTANCE')
+    bpy.context.scene.cursor_location = [0,0,0]
 
 # Set a freestyle preset.
 def setFreestylePreset(freestyle_preset):

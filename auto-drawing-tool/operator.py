@@ -80,8 +80,9 @@ class AutoDrawOperation(bpy.types.Operator):
         
         # Finish at end frame.
         bpy.context.scene.frame_current = sce.draw_end_frame
+        
         # Finish with cursor at center.
-        bpy.context.scene.cursor_location = [0,0,0]
+        #bpy.context.scene.cursor_location = [0,0,0]
 
         return {'FINISHED'}
 
