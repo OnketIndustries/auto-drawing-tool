@@ -79,7 +79,7 @@ class AutoDrawOperation(bpy.types.Operator):
              sort=self.sort_select, freestyle_preset=self.freestyle_select, line_thick=self.line_thick_float)
         
         # Finish at end frame.
-        #bpy.context.scene.frame_current = sce.draw_end_frame
+        bpy.context.scene.frame_current = sce.draw_end_frame
         
         # Finish with cursor at center.
         #bpy.context.scene.cursor_location = [0,0,0]

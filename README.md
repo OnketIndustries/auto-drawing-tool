@@ -84,7 +84,6 @@ Download: [v0.2.1.zip](https://github.com/squarednob/auto-drawing-tool/archive/v
 
 ###v0.2.2
 1. Not to change cursor after selecting "Change Drawing Order" except for "CAMERA".
-2. Not to change frame after clicking "Set Auto Drawing".
 
 Download: [v0.2.2.zip](https://github.com/squarednob/auto-drawing-tool/archive/v0.2.2.zip).
 
