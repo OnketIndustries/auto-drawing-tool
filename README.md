@@ -79,11 +79,13 @@ Download: [v0.2.0.zip](https://github.com/squarednob/auto-drawing-tool/archive/v
 1. It now can work for multiple selected objects.
 2. End frame remains if it is longer than auto drawing's end frame.
 3. Objects other than mesh, curve, or text will be ignored.
+
 Download: [v0.2.1.zip](https://github.com/squarednob/auto-drawing-tool/archive/v0.2.1.zip)
 
 ###v0.2.2
 1. Not to change cursor after selecting "Change Drawing Order" except for "CAMERA".
 2. Not to change frame after clicking "Set Auto Drawing".
+
 Download: [v0.2.2.zip](https://github.com/squarednob/auto-drawing-tool/archive/v0.2.2.zip).
 
 ##Todo List
