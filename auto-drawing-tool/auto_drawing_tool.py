@@ -7,6 +7,20 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
     
     # Loop through selected objects.
     selected_objects = bpy.context.selected_objects
+    
+    
+    # curveの0点と選択したオブジェクトの距離ごとにソートして、それに従って、フレーム範囲を分割して順に描きたい---------。
+    active_curve = bpy.context.active_object
+    print(selected_objects)
+    if active_curve.type == 'CURVE':
+        if active_curve.dimensions == '3D':
+            print(active_curve.data.splines[0].bezier_points[0].co)
+            pass
+            # curveの0点に最も近いものを選び、選んだらリストからはずす。
+            # 次にcurveの1点に近いものを選び、選んだらリストからはずす。
+    #-----------------------------------------------------------------
+            
+    
     for selected_object in selected_objects:
         
         bpy.ops.object.select_all(action='DESELECT')
