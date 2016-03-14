@@ -13,11 +13,18 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
     active_curve = bpy.context.active_object
     print(selected_objects)
     if active_curve.type == 'CURVE':
-        if active_curve.dimensions == '3D':
-            print(active_curve.data.splines[0].bezier_points[0].co)
-            pass
-            # curveの0点に最も近いものを選び、選んだらリストからはずす。
+        po = active_curve.data.splines[0].bezier_points[0].co
+        print(po)
+        for selected_object in selected_objects:
+            if selected_object != active_curve:
+                # curveの0点にある距離で近いオブジェクトのvertexをすべて挙げる。
+                print(nearesetPoints(selected_object, point=po, distance=4))
+            # curveの0点の範囲nにvertexが入っている近いものを選ぶ。
+            # vertexを保存し、後でcursorを使ったdrawに使う。
+            # 選ばれたものはリストからはずす。
             # 次にcurveの1点に近いものを選び、選んだらリストからはずす。
+            # つまりリストを近いもの順にする。
+            # build modifierのフレーム数を、最初のリストから最後のリストまで分割して、それぞれ順に描かれるようにする。
     #-----------------------------------------------------------------
             
     
@@ -69,6 +76,26 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
             if line_thick == None:
                 line_thick = 2
             bpy.context.scene.render.line_thickness = line_thick
+
+# ある点とあるオブジェクトで、ある距離で近いvertexをリストとして出力：
+def nearesetPoints(obj, point=(0,0,0), distance=0.47):
+    import mathutils
+    mesh = obj.data
+
+    # verticesのサイズを入力：
+    size = len(mesh.vertices)
+    kd = mathutils.kdtree.KDTree(size)
+
+    # ワールド座標に変換してvertexとインデックスを次々挿入：
+    for i, v in enumerate(mesh.vertices):
+        kd.insert(obj.matrix_world * v.co, i)
+
+    # 分割したデータ数を均等にするために、かならずfindの前に必要：
+    kd.balance()
+    
+    # ある点に距離が近いものをすべて挙げる：
+    co_find = point
+    return kd.find_range(co_find, distance)
 
 # Activate build modifier and freestyle.
 def addBuildFreestyle(frame_range):
