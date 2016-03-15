@@ -35,21 +35,6 @@ class AutoDrawOperation(bpy.types.Operator):
         description = "Apply subdivision surface.",
         default = False
     )
-    divide_frame_check = bpy.props.BoolProperty(
-        name = "Divide frame par object",
-        description = "Apply subdivision surface.",
-        default = False
-    )
-    along_curve_check = bpy.props.BoolProperty(
-        name = "Along Curve",
-        description = "Apply subdivision surface.",
-        default = False
-    )
-    sort_curve_check = bpy.props.BoolProperty(
-        name = "Sort along Curve",
-        description = "Apply subdivision surface.",
-        default = False
-    )
     line_thick_float = bpy.props.FloatProperty(
         name = "Line Thickness",
         description = "Set line thickness.",
@@ -77,6 +62,13 @@ class AutoDrawOperation(bpy.types.Operator):
                 ('SELECTED', 'SELECTED', "Draw from selected point."),
                 ('MATERIAL', 'MATERIAL', "Draw along with material.")]
     )
+    divide_frame_select = bpy.props.EnumProperty(
+        name = "Divide Frame per object.",
+        description = "Divide frame per object for build modifier.",
+        items = [('NONE', 'NONE', "None."),
+                ('SIMPLE_DIVIDE', 'SIMPLE_DIVIDE', "Divide frame simply from order of object list."),
+                ('ALONG_CURVE', 'ALONG_CURVE', "Divide frame from order of nearer object to curve.")]
+    )
     # -----------------------------------------
 
     '''
@@ -92,7 +84,7 @@ class AutoDrawOperation(bpy.types.Operator):
              basic=self.basic_check, bl_render=self.blrender_check,
              material=self.material_check, world=self.world_check, modifier=self.modifier_check,
              sort=self.sort_select, freestyle_preset=self.freestyle_select, line_thick=self.line_thick_float,
-             divide_frame=self.divide_frame_check, along_curve=self.along_curve_check, sort_curve=self.sort_curve_check)
+             divide_frame=self.divide_frame_select, sort_along_curve=None)
         
         # Finish at end frame.
         bpy.context.scene.frame_current = sce.draw_end_frame
