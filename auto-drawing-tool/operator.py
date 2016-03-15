@@ -40,6 +40,16 @@ class AutoDrawOperation(bpy.types.Operator):
         description = "Apply subdivision surface.",
         default = False
     )
+    along_curve_check = bpy.props.BoolProperty(
+        name = "Along Curve",
+        description = "Apply subdivision surface.",
+        default = False
+    )
+    sort_curve_check = bpy.props.BoolProperty(
+        name = "Sort along Curve",
+        description = "Apply subdivision surface.",
+        default = False
+    )
     line_thick_float = bpy.props.FloatProperty(
         name = "Line Thickness",
         description = "Set line thickness.",
@@ -64,7 +74,6 @@ class AutoDrawOperation(bpy.types.Operator):
                 ('CAMERA', 'CAMERA', "Draw from a nearest point to camera."),
                 ('VIEW_ZAXIS', 'VIEW_ZAXIS', "Draw along with Z axis."),
                 ('VIEW_XAXIS', 'VIEW_XAXIS', "Draw along with X axis."),
-                ('ALONG_CURVE', 'ALONG_CURVE', "Draw along with curve."),
                 ('SELECTED', 'SELECTED', "Draw from selected point."),
                 ('MATERIAL', 'MATERIAL', "Draw along with material.")]
     )
@@ -83,7 +92,7 @@ class AutoDrawOperation(bpy.types.Operator):
              basic=self.basic_check, bl_render=self.blrender_check,
              material=self.material_check, world=self.world_check, modifier=self.modifier_check,
              sort=self.sort_select, freestyle_preset=self.freestyle_select, line_thick=self.line_thick_float,
-             divide_frame=self.divide_frame_check)
+             divide_frame=self.divide_frame_check, along_curve=self.along_curve_check, sort_curve=self.sort_curve_check)
         
         # Finish at end frame.
         bpy.context.scene.frame_current = sce.draw_end_frame
