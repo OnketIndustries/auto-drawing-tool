@@ -59,6 +59,7 @@ class AutoDrawOperation(bpy.types.Operator):
                 ('CAMERA', 'CAMERA', "Locate on 3D cursor"),
                 ('VIEW_ZAXIS', 'VIEW_ZAXIS', "Locate on 3D cursor"),
                 ('VIEW_XAXIS', 'VIEW_XAXIS', "Locate on 3D cursor"),
+                ('ALONG_CURVE', 'ALONG_CURVE', "Draw along with curve"),
                 ('SELECTED', 'SELECTED', "Locate on 3D cursor"),
                 ('MATERIAL', 'MATERIAL', "Locate on 3D cursor")]
     )
