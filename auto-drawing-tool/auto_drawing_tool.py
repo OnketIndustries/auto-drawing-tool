@@ -5,71 +5,43 @@ import mathutils
 # Main function.
 def autoDraw(frame_range=None, basic=None, bl_render=None,
              material=None, world=None, modifier=None,
-             sort=None, freestyle_preset=None, line_thick=None):
+             sort=None, freestyle_preset=None, line_thick=None,
+             divide_frame=None):
     
     # Loop through selected objects.
     selected_objects = bpy.context.selected_objects
     
-    
     # curveの0点と選択したオブジェクトの距離ごとにソートして、それに従って、フレーム範囲を分割して順に描きたい---------。
-    active_curve = bpy.context.active_object
-    bezier_points = active_curve.data.splines[0].bezier_points
-    if active_curve.type == 'CURVE':
-        # active_curve以外をターゲットとするリスト：
-        target_objects = [obj for obj in selected_objects if obj != active_curve]
-        
-        # forループのたびにどのbezier_pointを使うかのインデックス：
-        step = len(bezier_points) / len(target_objects)
-        bezier_points_index = [math.floor(step*i) for i in range(len(target_objects))]
-        
-        frame_duration = frame_range[1] - frame_range[0]
-        frame_step = math.floor(frame_duration / len(target_objects))
-        print(frame_step)
-        
-        # curveのポイントの分だけ、最も近いオブジェクトをリストに入れる：
-        for i in bezier_points_index:
-            point_co = bezier_points[i].co
+    if sort == 'ALONG_CURVE':
+        if bpy.context.active_object.type == 'CURVE':
+            active_curve = bpy.context.active_object
+            bezier_points = active_curve.data.splines[0].bezier_points
+            # selected_objectsからactive_curveを除く：
+            selected_objects.remove(active_curve)
             
-            # active_curveの0点と最も近いvertexを持つオブジェクト：
-            nearest_object = addNearestObject(target_objects=target_objects, point=point_co)
-            
-            # リスト関係なく、cursorを近い場所に変え、cursor_distaceでのbuild modifier適用。
-            bpy.ops.object.select_all(action='DESELECT')
-            nearest_object['object'].select = True
-            bpy.context.scene.objects.active = nearest_object['object']
-            
-            sortAlongCurve(obj=nearest_object['object'], location=nearest_object['coordinate'])
-            
-            bpy.ops.object.select_all(action='DESELECT')
-            
-            # ターゲットリストから削除する：
-            target_objects.remove(nearest_object['object'])
-            
-            # kd-treeで一番近い一つではなく、範囲内のものにする。
-            # build modifierのフレーム数を、最初のリストから最後のリストまで分割して、それぞれ順に描かれるようにする。
-            # そのためには、target_objectのlenとcurveのpointのlenがどちらかが多かった時に、どうループするかを考える。
-            # 特にcurveのpointが少ない時は、ループを段飛ばしにしないといけない。
-    #-----------------------------------------------------------------
-            
+            # selected_objectsの順をcurveに近い順に変更。
+            new_object_list = drawAlongCurve(selected_objects, bezier_points)
+            selected_objects = new_object_list
     
-    for selected_object in selected_objects:
-        
+    divided_frame_step = divideFrame(objects=selected_objects, frame_range=frame_range)
+    
+    for i, selected_object in enumerate(selected_objects):
         bpy.ops.object.select_all(action='DESELECT')
         selected_object.select = True
         bpy.context.scene.objects.active = selected_object
-        
+    
         # Only work for mesh, curve, or text.
         if bpy.context.object.type in ['MESH','CURVE','FONT']:
-            # Default value is [1,100].
-            if frame_range == None:
-                frame_range = [1, 100]
-            else:
-                frame_range = frame_range
-    
+            if divide_frame == True:
+                frame_range[0] = divided_frame_step * i
+                frame_range[1] = divided_frame_step * (i+1)
+                print(i)
+                print(frame_range)
+
             # Turn on/off each step--------------------
             if basic == True:
                 addBuildFreestyle(frame_range)
-    
+
             if bl_render == True:
                 goBlRender()
 
@@ -81,10 +53,8 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
 
             if modifier == True:
                 addModifiers()
-    
+
             # Sort faces for order of build modifier.
-            if sort == 'CURVE_ALONG':
-                pass
             if sort == 'CAMERA':
                 cameraViewSort()
             elif sort in ['VIEW_ZAXIS', 'VIEW_XAXIS', 'MATERIAL', 'CURSOR_DISTANCE', 'SELECTED', 'RANDOMIZE', 'REVERSE']:
@@ -93,11 +63,11 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
                 pass
             else:
                 pass
-    
+
             # Apply a freestyle setting.
             if freestyle_preset != None:
                 setFreestylePreset(freestyle_preset)
-    
+
             # Change line thickness.
             if line_thick == None:
                 line_thick = 2
@@ -145,28 +115,20 @@ def sortAlongCurve(obj, location):
     bpy.context.scene.cursor_location = location
     changeSort(sort_type='CURSOR_DISTANCE')
 
-def drawAlongCurve():
+def drawAlongCurve(objects, bezier_points):
     # curveの0点と選択したオブジェクトの距離ごとにソートして、それに従って、フレーム範囲を分割して順に描きたい---------。
-    active_curve = bpy.context.active_object
-    bezier_points = active_curve.data.splines[0].bezier_points
-    if active_curve.type == 'CURVE':
-        # active_curve以外をターゲットとするリスト：
-        target_objects = [obj for obj in selected_objects if obj != active_curve]
+        # curveの各pointに、いくつのオブジェクトを割り当てるかのリスト生成：
+        step = len(bezier_points) / len(objects)
+        bezier_points_index = [math.floor(step*i) for i in range(len(objects))]
         
-        # forループのたびにどのbezier_pointを使うかのインデックス：
-        step = len(bezier_points) / len(target_objects)
-        bezier_points_index = [math.floor(step*i) for i in range(len(target_objects))]
-        
-        frame_duration = frame_range[1] - frame_range[0]
-        frame_step = math.floor(frame_duration / len(target_objects))
-        print(frame_step)
+        new_object_list = []
         
         # curveのポイントの分だけ、最も近いオブジェクトをリストに入れる：
         for i in bezier_points_index:
             point_co = bezier_points[i].co
             
             # active_curveの0点と最も近いvertexを持つオブジェクト：
-            nearest_object = addNearestObject(target_objects=target_objects, point=point_co)
+            nearest_object = addNearestObject(target_objects=objects, point=point_co)
             
             # リスト関係なく、cursorを近い場所に変え、cursor_distaceでのbuild modifier適用。
             bpy.ops.object.select_all(action='DESELECT')
@@ -178,14 +140,24 @@ def drawAlongCurve():
             bpy.ops.object.select_all(action='DESELECT')
             
             # ターゲットリストから削除する：
-            target_objects.remove(nearest_object['object'])
+            objects.remove(nearest_object['object'])
+            # 新しいオブジェクトリストに近い方から追加する：
+            new_object_list.append(nearest_object['object'])
+        return new_object_list
+            
             
             # kd-treeで一番近い一つではなく、範囲内のものにする。
             # build modifierのフレーム数を、最初のリストから最後のリストまで分割して、それぞれ順に描かれるようにする。
             # そのためには、target_objectのlenとcurveのpointのlenがどちらかが多かった時に、どうループするかを考える。
             # 特にcurveのpointが少ない時は、ループを段飛ばしにしないといけない。
     #-----------------------------------------------------------------
-    
+
+# 選択オブジェクトの数でbuildのフレームを分割：
+def divideFrame(objects, frame_range):
+    frame_duration = frame_range[1] - frame_range[0]
+    print(len(objects))
+    frame_step = math.floor(frame_duration / len(objects))
+    return frame_step
 
 # Activate build modifier and freestyle.
 def addBuildFreestyle(frame_range):
