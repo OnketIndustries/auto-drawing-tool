@@ -43,24 +43,24 @@ class AutoDrawOperation(bpy.types.Operator):
     freestyle_select = bpy.props.EnumProperty(
         name = "Freestyle Preset",
         description = "Set Freestyle Preset",
-        items = [('NONE', 'NONE', "Locate on 3D cursor"),
-                ('MARKER_PEN', 'MARKER_PEN', "Locate on 3D cursor"),
-                ('BRUSH_PEN', 'BRUSH_PEN', "Locate on 3D cursor"),
-                ('SCRIBBLE', 'SCRIBBLE', "Locate on 3D cursor"),
-                ('FREE_HAND', 'FREE_HAND', "Locate on 3D cursor"),
-                ('CHILDISH', 'CHILDISH', "Locate on 3D cursor")]
+        items = [('NONE', 'NONE', "None."),
+                ('MARKER_PEN', 'MARKER_PEN', "Marker pen."),
+                ('BRUSH_PEN', 'BRUSH_PEN', "Brush pen."),
+                ('SCRIBBLE', 'SCRIBBLE', "Scribble."),
+                ('FREE_HAND', 'FREE_HAND', "Free hand."),
+                ('CHILDISH', 'CHILDISH', "Childish.")]
     )
     sort_select = bpy.props.EnumProperty(
         name = "Change Drawing Order(Only for MESH)",
         description = "Sort faces of mesh for build modifier.",
-        items = [('NONE', 'NONE', "Locate on 3D cursor"),
-                ('REVERSE', 'REVERSE', "Locate on 3D cursor"),
-                ('CURSOR_DISTANCE', 'CURSOR_DISTANCE', "Locate on 3D cursor"),
-                ('CAMERA', 'CAMERA', "Locate on 3D cursor"),
-                ('VIEW_ZAXIS', 'VIEW_ZAXIS', "Locate on 3D cursor"),
-                ('VIEW_XAXIS', 'VIEW_XAXIS', "Locate on 3D cursor"),
-                ('SELECTED', 'SELECTED', "Locate on 3D cursor"),
-                ('MATERIAL', 'MATERIAL', "Locate on 3D cursor")]
+        items = [('NONE', 'NONE', "None."),
+                ('REVERSE', 'REVERSE', "Reverse."),
+                ('CURSOR_DISTANCE', 'CURSOR_DISTANCE', "Draw from a nearest point to cursor."),
+                ('CAMERA', 'CAMERA', "Draw from a nearest point to camera."),
+                ('VIEW_ZAXIS', 'VIEW_ZAXIS', "Draw along with Z axis."),
+                ('VIEW_XAXIS', 'VIEW_XAXIS', "Draw along with X axis."),
+                ('SELECTED', 'SELECTED', "Draw from selected point."),
+                ('MATERIAL', 'MATERIAL', "Draw along with material.")]
     )
     # -----------------------------------------
 
