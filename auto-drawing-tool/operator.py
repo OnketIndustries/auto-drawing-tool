@@ -63,11 +63,11 @@ class AutoDrawOperation(bpy.types.Operator):
                 ('MATERIAL', 'MATERIAL', "Draw along with material.")]
     )
     divide_frame_select = bpy.props.EnumProperty(
-        name = "Divide Frame per object.",
+        name = "Draw Objects In Turn.",
         description = "Divide frame per object for build modifier.",
         items = [('NONE', 'NONE', "None."),
                 ('SIMPLE_DIVIDE', 'SIMPLE_DIVIDE', "Divide frame simply from order of object list."),
-                ('ALONG_CURVE', 'ALONG_CURVE', "Divide frame from order of nearer object to curve.")]
+                ('ALONG_CURVE', 'CURVE_DISTANCE', "Divide frame from order of nearer object to curve.")]
     )
     # -----------------------------------------
 

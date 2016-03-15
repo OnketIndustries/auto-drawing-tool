@@ -13,26 +13,26 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
     # Loop through selected objects.
     selected_objects = bpy.context.selected_objects
     
-    # curveに近いオブジェクトから先に描く：
+    # Sort object list by nearer object to curve's each point.
     if divide_frame == 'ALONG_CURVE':
         if bpy.context.active_object.type == 'CURVE':
             active_curve = bpy.context.active_object
             bezier_points = active_curve.data.splines[0].bezier_points
-            # selected_objectsからactive_curveを除く：
+            # Remove active_curve from selected_objects.
             selected_objects.remove(active_curve)
             
-            # selected_objectsの順をcurveに近い順に変更。
+            # Update selected_objects to sorted list.
             sorted_objects, sorted_objects_info = sortObjectAlongCurve(selected_objects, bezier_points)
             selected_objects = sorted_objects
             
-            # curveに近いvertexの順にソート：
+            # Sort vertex in order of nearer curve's point.
             '''
             if sort_along_curve == True:
                 for obj_info in sorted_objects_info:
                     curveSort(obj=obj_info['object'], location=obj_info['coordinate'])
             '''
     
-    # フレームをオブジェクトで分配：
+    # Divide frame par object.
     if divide_frame in ['ALONG_CURVE', 'SIMPLE_DIVIDE']:
         divided_frame_step = divideFrame(objects=selected_objects, frame_range=frame_range)
     
