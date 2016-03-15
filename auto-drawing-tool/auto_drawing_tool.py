@@ -1,4 +1,5 @@
 import bpy
+import mathutils
 
 # Main function.
 def autoDraw(frame_range=None, basic=None, bl_render=None,
@@ -11,20 +12,36 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
     
     # curveの0点と選択したオブジェクトの距離ごとにソートして、それに従って、フレーム範囲を分割して順に描きたい---------。
     active_curve = bpy.context.active_object
-    print(selected_objects)
     if active_curve.type == 'CURVE':
-        po = active_curve.data.splines[0].bezier_points[0].co
-        print(po)
-        for selected_object in selected_objects:
-            if selected_object != active_curve:
-                # curveの0点にある距離で近いオブジェクトのvertexをすべて挙げる。
-                print(nearesetPoints(selected_object, point=po, distance=4))
-            # curveの0点の範囲nにvertexが入っている近いものを選ぶ。
-            # vertexを保存し、後でcursorを使ったdrawに使う。
-            # 選ばれたものはリストからはずす。
-            # 次にcurveの1点に近いものを選び、選んだらリストからはずす。
-            # つまりリストを近いもの順にする。
+        # active_curve以外をターゲットとするリスト：
+        target_objects = [obj for obj in selected_objects if obj != active_curve]
+        #ordered_list = []
+        
+        # curveのポイントの分だけ、最も近いオブジェクトをリストに入れる：
+        for point in active_curve.data.splines[0].bezier_points:
+            point_co = point.co
+        
+            # active_curveの0点と最も近いvertexを持つオブジェクト：
+            nearest_object = addNearestObject(target_objects=target_objects, point=point_co)
+            # ターゲットから削除する：
+            #target_objects.remove(nearest_object['object'])
+            # ordered_listに追加する。
+            #ordered_list.append(nearest_object)
+            
+            # リスト関係なく、cursorを近い場所に変え、cursor_distaceでのbuild modifier適用。
+            bpy.ops.object.select_all(action='DESELECT')
+            nearest_object['object'].select = True
+            bpy.context.scene.objects.active = nearest_object['object']
+            
+            drawAlongCurve(obj=nearest_object['object'], location=nearest_object['coordinate'])
+            
+            bpy.ops.object.select_all(action='DESELECT')
+            
+            
+            # kd-treeで一番近い一つではなく、範囲内のものにする。
             # build modifierのフレーム数を、最初のリストから最後のリストまで分割して、それぞれ順に描かれるようにする。
+            # そのためには、target_objectのlenとcurveのpointのlenがどちらかが多かった時に、どうループするかを考える。
+            # 特にcurveのpointが少ない時は、ループを段飛ばしにしないといけない。
     #-----------------------------------------------------------------
             
     
@@ -77,25 +94,47 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
                 line_thick = 2
             bpy.context.scene.render.line_thickness = line_thick
 
-# ある点とあるオブジェクトで、ある距離で近いvertexをリストとして出力：
-def nearesetPoints(obj, point=(0,0,0), distance=0.47):
-    import mathutils
-    mesh = obj.data
-
-    # verticesのサイズを入力：
-    size = len(mesh.vertices)
+# kd-treeのベース関数：
+def kdFind(data, point):
+    # サイズを入力：
+    size = len(data)
     kd = mathutils.kdtree.KDTree(size)
-
-    # ワールド座標に変換してvertexとインデックスを次々挿入：
-    for i, v in enumerate(mesh.vertices):
-        kd.insert(obj.matrix_world * v.co, i)
-
+    
+    for i, d in enumerate(data):
+        kd.insert(d, i)
     # 分割したデータ数を均等にするために、かならずfindの前に必要：
     kd.balance()
-    
-    # ある点に距離が近いものをすべて挙げる：
-    co_find = point
-    return kd.find_range(co_find, distance)
+    # ある点に距離が近いものを挙げる：
+    co, index, dist = kd.find(point)
+    return [co, index, dist]
+
+# オブジェクトのvertexをworld座標に変換してkd-tree実行：
+def kdFindNearestPoint(obj, point=(0,0,0)):
+    world_verts = [obj.matrix_world * v.co for v in obj.data.vertices]
+    result = kdFind(world_verts, point)
+    # 指標のために、オブジェクトをリストの最後に加えてreturn。
+    result.append(obj)
+    # return [座標, vertex番号, 距離,　オブジェクト]：
+    return result
+
+def addNearestObject(target_objects, point):
+    nearest = {'distance': 10000, 'data':[], 'object': None}
+    for obj in target_objects:
+        # curveの0点に近いオブジェクトのvertexを挙げる。[座標, vertex番号, 距離,　オブジェクト]が出る。
+        near_result = kdFindNearestPoint(obj=obj, point=point)
+        if near_result[2] < nearest['distance']:
+            nearest['distance'] = near_result[2]
+            nearest['object'] = near_result[3]
+            nearest['coordinate'] = near_result[0]
+            nearest['vertex_index'] = near_result[1]
+    # return {'distance': n, 'object': obj, 'coordinate': 座標, 'vertex_index': vertex番号}
+    return nearest
+
+def drawAlongCurve(obj, location):
+    bpy.context.scene.objects.active = obj
+    # カーソルをcurveに近いvertexに変えて、CURSOR_DISTANCEでソート：
+    bpy.context.scene.cursor_location = location
+    changeSort(sort_type='CURSOR_DISTANCE')
 
 # Activate build modifier and freestyle.
 def addBuildFreestyle(frame_range):
