@@ -1,30 +1,55 @@
 import bpy
 
+from .divide_frame import sortObjectAlongCurve
+from .divide_frame import divideFrame
+
+
 # Main function.
 def autoDraw(frame_range=None, basic=None, bl_render=None,
              material=None, world=None, modifier=None,
-             sort=None, freestyle_preset=None, line_thick=None):
+             sort=None, freestyle_preset=None, line_thick=None,
+             divide_frame=None, sort_along_curve=None):
     
     # Loop through selected objects.
     selected_objects = bpy.context.selected_objects
-    for selected_object in selected_objects:
-        
+    
+    # Sort object list by nearer object to curve's each point.
+    if divide_frame == 'ALONG_CURVE':
+        if bpy.context.active_object.type == 'CURVE':
+            active_curve = bpy.context.active_object
+            # Remove active_curve from selected_objects.
+            selected_objects.remove(active_curve)
+            
+            # Update selected_objects to sorted list.
+            sorted_objects, sorted_objects_info = sortObjectAlongCurve(selected_objects, active_curve)
+            selected_objects = sorted_objects
+            
+            # Sort vertex in order of nearer curve's point.
+            '''
+            if sort_along_curve == True:
+                for obj_info in sorted_objects_info:
+                    curveSort(obj=obj_info['object'], location=obj_info['coordinate'])
+            '''
+    
+    # Divide frame par object.
+    if divide_frame in ['ALONG_CURVE', 'SIMPLE_DIVIDE']:
+        divided_frame_step = divideFrame(objects=selected_objects, frame_range=frame_range)
+    
+    for i, selected_object in enumerate(selected_objects):
         bpy.ops.object.select_all(action='DESELECT')
         selected_object.select = True
         bpy.context.scene.objects.active = selected_object
-        
+    
         # Only work for mesh, curve, or text.
         if bpy.context.object.type in ['MESH','CURVE','FONT']:
-            # Default value is [1,100].
-            if frame_range == None:
-                frame_range = [1, 100]
-            else:
-                frame_range = frame_range
-    
+            if divide_frame in ['ALONG_CURVE', 'SIMPLE_DIVIDE']:
+                frame_range[0] = divided_frame_step * i
+                frame_range[1] = divided_frame_step * (i+1)
+
             # Turn on/off each step--------------------
             if basic == True:
                 addBuildFreestyle(frame_range)
-    
+
             if bl_render == True:
                 goBlRender()
 
@@ -36,7 +61,7 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
 
             if modifier == True:
                 addModifiers()
-    
+
             # Sort faces for order of build modifier.
             if sort == 'CAMERA':
                 cameraViewSort()
@@ -46,11 +71,11 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
                 pass
             else:
                 pass
-    
+
             # Apply a freestyle setting.
             if freestyle_preset != None:
                 setFreestylePreset(freestyle_preset)
-    
+
             # Change line thickness.
             if line_thick == None:
                 line_thick = 2
@@ -127,6 +152,15 @@ def cameraViewSort():
     bpy.context.scene.cursor_location = cam.location
     changeSort(sort_type='CURSOR_DISTANCE')
     bpy.context.scene.cursor_location = [0,0,0]
+
+def curveSort(obj, location):
+    bpy.ops.object.select_all(action='DESELECT')
+    obj.select = True
+    bpy.context.scene.objects.active = obj
+    # カーソルをcurveに近いvertexに変えて、CURSOR_DISTANCEでソート：
+    bpy.context.scene.cursor_location = location
+    changeSort(sort_type='CURSOR_DISTANCE')
+    bpy.ops.object.select_all(action='DESELECT')
 
 # Set a freestyle preset.
 def setFreestylePreset(freestyle_preset):

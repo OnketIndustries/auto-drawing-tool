@@ -61,6 +61,16 @@ class AutoDrawOperation(bpy.types.Operator):
                 ('VIEW_XAXIS', 'VIEW_XAXIS', "Draw along with X axis."),
                 ('SELECTED', 'SELECTED', "Draw from selected point."),
                 ('MATERIAL', 'MATERIAL', "Draw along with material.")]
+<<<<<<< HEAD
+=======
+    )
+    divide_frame_select = bpy.props.EnumProperty(
+        name = "Draw Objects In Turn.",
+        description = "Divide frame per object for build modifier.",
+        items = [('NONE', 'NONE', "None."),
+                ('SIMPLE_DIVIDE', 'SIMPLE', "Divide frame simply from order of object list."),
+                ('ALONG_CURVE', 'ALONG_CURVE', "Divide frame from order of nearer object to curve.")]
+>>>>>>> draw_along_curve
     )
     # -----------------------------------------
 
@@ -76,7 +86,8 @@ class AutoDrawOperation(bpy.types.Operator):
         auto_drawing_tool.autoDraw(frame_range=[sce.draw_start_frame, sce.draw_end_frame],
              basic=self.basic_check, bl_render=self.blrender_check,
              material=self.material_check, world=self.world_check, modifier=self.modifier_check,
-             sort=self.sort_select, freestyle_preset=self.freestyle_select, line_thick=self.line_thick_float)
+             sort=self.sort_select, freestyle_preset=self.freestyle_select, line_thick=self.line_thick_float,
+             divide_frame=self.divide_frame_select, sort_along_curve=None)
         
         # Finish at end frame.
         bpy.context.scene.frame_current = sce.draw_end_frame
