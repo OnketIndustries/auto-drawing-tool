@@ -16,7 +16,7 @@ def _kdFind(data, point):
     
     return [co, index, dist]
 
-# kd-tree for vertex and curve's point.
+# kd-tree for vertex and a point.
 def _kdFindNearestPoint(obj, point=(0,0,0)):
     # Change into world coordinate.
     world_verts = [obj.matrix_world * v.co for v in obj.data.vertices]
@@ -25,9 +25,9 @@ def _kdFindNearestPoint(obj, point=(0,0,0)):
     # return [coordinate, vertex index, distance, object].
     return result
 
-# kd-tree looping through objects and curve's point.
+# kd-tree looping through objects and a point.
 def _addNearestObject(objects, point):
-    nearest = {'distance': 10000, 'data':[], 'object': None}
+    nearest = {'distance': 10000, 'object': None, 'coordinate': None, 'vertex_index': None}
     for obj in objects:
         near_result = _kdFindNearestPoint(obj=obj, point=point)
         if near_result[2] < nearest['distance']:
@@ -35,24 +35,42 @@ def _addNearestObject(objects, point):
             nearest['object'] = near_result[3]
             nearest['coordinate'] = near_result[0]
             nearest['vertex_index'] = near_result[1]
-    # return {'distance': n, 'object': obj, 'coordinate': vec, 'vertex_index': n}
     return nearest
 
+# Make list of 3 valued location vector.
+def _makeCurveLocVector(active_curve):
+    curve_points = []
+    if active_curve.data.splines[0].type == 'BEZIER':
+        for p in active_curve.data.splines[0].bezier_points:
+            curve_points.append(p.co)
+    
+    if active_curve.data.splines[0].type == 'NURBS':
+        for p in active_curve.data.splines[0].points:
+            curve_points.append(mathutils.Vector(p.co[:3]))
+    return curve_points
+
 # Sort object by nearer vertex to curve's point.
-def sortObjectAlongCurve(objects, bezier_points):
-        # Forloop index for correspoinding curve to each point.
-        step = len(bezier_points) / len(objects)
-        bezier_points_index = [math.floor(step*i) for i in range(len(objects))]
+def sortObjectAlongCurve(objects, active_curve):
+        
+        # Make list of 3 valued location vector.
+        curve_points = _makeCurveLocVector(active_curve)
+    
+        # Index of curve's point for correspoinding object.
+        step = len(curve_points) / len(objects)
+        curve_points_index = [math.floor(step*i) for i in range(len(objects))]
         
         sorted_objects = []
         sorted_objects_info = []
         
         # Make list in order of nearest object to a curve's point.curve.
-        for i in bezier_points_index:
-            point_co = bezier_points[i].co
+        for i in curve_points_index:
+            point_co = curve_points[i]
             
             # Nearest object to the curve's point.
             nearest_object = _addNearestObject(objects=objects, point=point_co)
+            
+            print(point_co)
+            print(nearest_object)
             
             objects.remove(nearest_object['object'])
 

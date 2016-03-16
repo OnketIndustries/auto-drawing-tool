@@ -17,12 +17,11 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
     if divide_frame == 'ALONG_CURVE':
         if bpy.context.active_object.type == 'CURVE':
             active_curve = bpy.context.active_object
-            bezier_points = active_curve.data.splines[0].bezier_points
             # Remove active_curve from selected_objects.
             selected_objects.remove(active_curve)
             
             # Update selected_objects to sorted list.
-            sorted_objects, sorted_objects_info = sortObjectAlongCurve(selected_objects, bezier_points)
+            sorted_objects, sorted_objects_info = sortObjectAlongCurve(selected_objects, active_curve)
             selected_objects = sorted_objects
             
             # Sort vertex in order of nearer curve's point.
