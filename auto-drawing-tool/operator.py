@@ -61,8 +61,6 @@ class AutoDrawOperation(bpy.types.Operator):
                 ('VIEW_XAXIS', 'VIEW_XAXIS', "Draw along with X axis."),
                 ('SELECTED', 'SELECTED', "Draw from selected point."),
                 ('MATERIAL', 'MATERIAL', "Draw along with material.")]
-<<<<<<< HEAD
-=======
     )
     divide_frame_select = bpy.props.EnumProperty(
         name = "Draw Objects In Turn.",
@@ -70,7 +68,6 @@ class AutoDrawOperation(bpy.types.Operator):
         items = [('NONE', 'NONE', "None."),
                 ('SIMPLE_DIVIDE', 'SIMPLE', "Divide frame simply from order of object list."),
                 ('ALONG_CURVE', 'ALONG_CURVE', "Divide frame from order of nearer object to curve.")]
->>>>>>> draw_along_curve
     )
     # -----------------------------------------
 
