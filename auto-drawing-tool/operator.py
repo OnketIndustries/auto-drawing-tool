@@ -67,7 +67,7 @@ class AutoDrawOperation(bpy.types.Operator):
         description = "Divide frame per object for build modifier.",
         items = [('NONE', 'NONE', "None."),
                 ('SIMPLE_DIVIDE', 'SIMPLE', "Divide frame simply from order of object list."),
-                ('ALONG_CURVE', 'CURVE_DISTANCE', "Divide frame from order of nearer object to curve.")]
+                ('ALONG_CURVE', 'ALONG_CURVE', "Divide frame from order of nearer object to curve.")]
     )
     # -----------------------------------------
 
