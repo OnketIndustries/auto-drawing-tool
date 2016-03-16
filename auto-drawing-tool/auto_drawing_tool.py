@@ -9,7 +9,7 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
              material=None, world=None, modifier=None,
              sort=None, freestyle_preset=None, line_thick=None,
              divide_frame=None, sort_along_curve=None):
-    
+
     # Loop through selected objects.
     selected_objects = bpy.context.selected_objects
     
@@ -30,7 +30,6 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
                 for obj_info in sorted_objects_info:
                     curveSort(obj=obj_info['object'], location=obj_info['coordinate'])
             '''
-    
     # Divide frame par object.
     if divide_frame in ['ALONG_CURVE', 'SIMPLE_DIVIDE']:
         divided_frame_step = divideFrame(objects=selected_objects, frame_range=frame_range)

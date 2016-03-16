@@ -42,11 +42,14 @@ def _makeCurveLocVector(active_curve):
     curve_points = []
     if active_curve.data.splines[0].type == 'BEZIER':
         for p in active_curve.data.splines[0].bezier_points:
-            curve_points.append(p.co)
+            world_point = active_curve.matrix_world * p.co
+            curve_points.append(world_point)
     
     if active_curve.data.splines[0].type == 'NURBS':
         for p in active_curve.data.splines[0].points:
-            curve_points.append(mathutils.Vector(p.co[:3]))
+            world_point = active_curve.matrix_world * mathutils.Vector(p.co[:3])
+            curve_points.append(world_point)
+    
     return curve_points
 
 # Sort object by nearer vertex to curve's point.
@@ -65,12 +68,10 @@ def sortObjectAlongCurve(objects, active_curve):
         # Make list in order of nearest object to a curve's point.curve.
         for i in curve_points_index:
             point_co = curve_points[i]
+            print(curve_points[i])
             
             # Nearest object to the curve's point.
             nearest_object = _addNearestObject(objects=objects, point=point_co)
-            
-            print(point_co)
-            print(nearest_object)
             
             objects.remove(nearest_object['object'])
 
