@@ -68,6 +68,12 @@ It affects only on MESH objects.
 * "SELECTED" = Sort from selected face.
 * "MATERIAL" = Sort by material.
 
+#### Draw Objects In Turn
+Draw selected objects in turn.
+For "ALONG_CURVE", select a curve lastly.
+* "NONE" = Draw object at the same time.
+* "SIMPLE" = Draw object in turn.
+* "ALONG_CURVE" = Draw objects along active curve's points.
 ---
 
 
