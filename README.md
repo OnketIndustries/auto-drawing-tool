@@ -99,7 +99,7 @@ Download: [v0.2.2b.zip](https://github.com/squarednob/auto-drawing-tool/archive/
 ###v0.3.0
 1. New option "Draw Objects In Turn": It includes "SIMPLE" and "ALONG_CURVE".
 2. Fix behavior of applying material/world: Now it makes new material/world not to change existing ones.
-3. Fix behavior of changing setting: Now it whenever turns on/off modifier, rendering engine, freestyle.
+3. Fix behavior of changing setting: Now it can turns on/off modifiers, rendering engine, freestyle, afterward.
 
 Download: [v0.3.0.zip](https://github.com/squarednob/auto-drawing-tool/archive/v0.3.0.zip)
 
