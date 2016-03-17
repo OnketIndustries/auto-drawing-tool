@@ -94,6 +94,8 @@ Download: [v0.2.2b.zip](https://github.com/squarednob/auto-drawing-tool/archive/
 
 Download: [v0.3.0.zip](https://github.com/squarednob/auto-drawing-tool/archive/v0.3.0.zip)
 
+---
+
 ##Todo List
 * Change drawing order for text object.
 * Vanish line on internal faces during building animation.
