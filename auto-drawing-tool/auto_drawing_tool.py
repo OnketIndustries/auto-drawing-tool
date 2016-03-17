@@ -1,6 +1,6 @@
 import bpy
 
-from .divide_frame import sortObjectAlongCurve
+from .divide_frame import sortSelectedObjectAlongCurve
 from .divide_frame import divideFrame
 
 
@@ -10,26 +10,16 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
              sort=None, freestyle_preset=None, line_thick=None,
              divide_frame=None, sort_along_curve=None):
 
-    # Loop through selected objects.
+    # object list Includes only mesh, curve, or font.
     selected_objects = bpy.context.selected_objects
+    for obj in selected_objects:
+        if obj.type not in ['MESH','CURVE','FONT']:
+            selected_objects.remove(obj)
     
     # Sort object list by nearer object to curve's each point.
     if divide_frame == 'ALONG_CURVE':
-        if bpy.context.active_object.type == 'CURVE':
-            active_curve = bpy.context.active_object
-            # Remove active_curve from selected_objects.
-            selected_objects.remove(active_curve)
-            
-            # Update selected_objects to sorted list.
-            sorted_objects, sorted_objects_info = sortObjectAlongCurve(selected_objects, active_curve)
-            selected_objects = sorted_objects
-            
-            # Sort vertex in order of nearer curve's point.
-            '''
-            if sort_along_curve == True:
-                for obj_info in sorted_objects_info:
-                    curveSort(obj=obj_info['object'], location=obj_info['coordinate'])
-            '''
+        selected_objects = sortSelectedObjectAlongCurve(bpy.context.active_object, selected_objects)
+
     # Divide frame par object.
     if divide_frame in ['ALONG_CURVE', 'SIMPLE_DIVIDE']:
         divided_frame_step = divideFrame(objects=selected_objects, frame_range=frame_range)
@@ -39,100 +29,117 @@ def autoDraw(frame_range=None, basic=None, bl_render=None,
         selected_object.select = True
         bpy.context.scene.objects.active = selected_object
     
-        # Only work for mesh, curve, or text.
-        if bpy.context.object.type in ['MESH','CURVE','FONT']:
-            if divide_frame in ['ALONG_CURVE', 'SIMPLE_DIVIDE']:
-                frame_range[0] = divided_frame_step * i
-                frame_range[1] = divided_frame_step * (i+1)
+        if divide_frame in ['ALONG_CURVE', 'SIMPLE_DIVIDE']:
+            frame_range[0] = divided_frame_step * i
+            frame_range[1] = divided_frame_step * (i+1)
 
-            # Turn on/off each step--------------------
-            if basic == True:
-                addBuildFreestyle(frame_range)
+        # Turn on/off each step--------------------
+        addBuildFreestyle(switch=basic, frame_range=frame_range)
+        goBlRender(switch=bl_render)
+        makeMaterial(switch=material)
+        makeWorld(switch=world)
+        addModifiers(switch=modifier)
 
-            if bl_render == True:
-                goBlRender()
+        # Sort faces for order of build modifier.
+        if sort == 'CAMERA':
+            cameraViewSort()
+        elif sort in ['VIEW_ZAXIS', 'VIEW_XAXIS', 'MATERIAL', 'CURSOR_DISTANCE', 'SELECTED', 'RANDOMIZE', 'REVERSE']:
+            changeSort(sort)
+        elif sort == 'NONE':
+            pass
+        else:
+            pass
 
-            if material == True:
-                makeMaterial()
+        # Apply a freestyle setting.
+        if freestyle_preset != None:
+            setFreestylePreset(freestyle_preset)
 
-            if world == True:
-                makeWorld()
+        # Change line thickness.
+        if line_thick == None:
+            line_thick = 2
+        bpy.context.scene.render.line_thickness = line_thick
 
-            if modifier == True:
-                addModifiers()
+# Activate/deactivate build modifier and freestyle.
+def addBuildFreestyle(switch, frame_range):
+    if switch == True:
+        # if Build modifier is absent, add it.
+        if 'Build_auto-drawing' not in bpy.context.object.modifiers.keys():
+            bpy.ops.object.modifier_add(type='BUILD')
+            bpy.context.object.modifiers[-1].name = 'Build_auto-drawing'
 
-            # Sort faces for order of build modifier.
-            if sort == 'CAMERA':
-                cameraViewSort()
-            elif sort in ['VIEW_ZAXIS', 'VIEW_XAXIS', 'MATERIAL', 'CURSOR_DISTANCE', 'SELECTED', 'RANDOMIZE', 'REVERSE']:
-                changeSort(sort)
-            elif sort == 'NONE':
-                pass
-            else:
-                pass
-
-            # Apply a freestyle setting.
-            if freestyle_preset != None:
-                setFreestylePreset(freestyle_preset)
-
-            # Change line thickness.
-            if line_thick == None:
-                line_thick = 2
-            bpy.context.scene.render.line_thickness = line_thick
-
-# Activate build modifier and freestyle.
-def addBuildFreestyle(frame_range):
-    # if Build modifier is absent, add it.
-    if 'Build_auto-drawing' not in bpy.context.object.modifiers.keys():
-        bpy.ops.object.modifier_add(type='BUILD')
-        bpy.context.object.modifiers[-1].name = 'Build_auto-drawing'
-
-    # Frame duration is end frame - start frame.
-    bpy.context.object.modifiers['Build_auto-drawing'].frame_start = frame_range[0]
-    bpy.context.object.modifiers['Build_auto-drawing'].frame_duration = frame_range[1] - frame_range[0]
-    changeEndFrame(frame_range)
+        # Frame duration is end frame - start frame.
+        bpy.context.object.modifiers['Build_auto-drawing'].frame_start = frame_range[0]
+        bpy.context.object.modifiers['Build_auto-drawing'].frame_duration = frame_range[1] - frame_range[0]
+        changeEndFrame(frame_range)
     
-    # Activate freestyle.
-    bpy.context.scene.render.use_freestyle = True
+        # Activate freestyle.
+        bpy.context.scene.render.use_freestyle = True
+    
+    else:
+        if 'Build_auto-drawing' in bpy.context.object.modifiers.keys():
+            bpy.ops.object.modifier_remove(modifier='Build_auto-drawing')
+        if bpy.context.scene.render.use_freestyle == True:
+            bpy.context.scene.render.use_freestyle = False
 
 # Set length of animation frame as end frame of build modifier.
 def changeEndFrame(frame_range):
     if frame_range[1] > bpy.context.scene.frame_end:
         bpy.context.scene.frame_end = frame_range[1]
 
-# Change rendering engine into Blender render.
-def goBlRender():
-    bpy.context.scene.render.engine = 'BLENDER_RENDER'
+# Change rendering engine.
+def goBlRender(switch):
+    if switch == True:
+        bpy.context.scene.render.engine = 'BLENDER_RENDER'
+    else:
+        bpy.context.scene.render.engine = 'CYCLES'
 
 # Add pure white material on object.
-def makeMaterial():
-    # Make material.
-    bpy.ops.material.new()
-    mat = bpy.data.materials[-1]
-
-    # Remove all in material slot and append the new material.
-    for m in bpy.context.object.data.materials:
-        bpy.ops.object.material_slot_remove()
-    bpy.context.object.data.materials.append(mat)
-
-    # White and shadeless.
-    mat.diffuse_color = (1, 1, 1)
-    mat.use_shadeless = True
+def makeMaterial(switch):
+    if switch == True:
+        # if the new material already on the top of slot, do nothing.
+        material_names = [m.name for m in bpy.context.object.data.materials]
+        if (len(material_names) > 0) and ('Auto-drawing' in material_names[0]):
+            pass
+        else:
+            # Make new material.
+            new_material = bpy.data.materials.new("Auto-drawing")
+            new_material.diffuse_color = (1, 1, 1)
+            new_material.use_shadeless = True
+        
+            # Delete all from material slot.
+            material_slot = list(bpy.context.object.data.materials).copy()
+            for m in bpy.context.object.data.materials:
+                bpy.ops.object.material_slot_remove()
+            
+            # New material is on the top of material slot.
+            material_slot.insert(0, new_material)
+            for m in material_slot:
+                bpy.context.object.data.materials.append(m)
 
 # Set pure white world for Blender render.
-def makeWorld():
-    # Pure white.
-    bpy.context.scene.world.horizon_color = (1, 1, 1)
+def makeWorld(switch):
+    if switch == True:
+        if 'Auto-drawing_World' in bpy.context.scene.world.name:
+            pass
+        else:
+            new_world = bpy.data.worlds.new('Auto-drawing_World')
+            bpy.context.scene.world = new_world
+            # Pure white.
+            bpy.context.scene.world.horizon_color = (1, 1, 1)
 
 # Apply preset modifier.
-def addModifiers():
-    # if subsurf modifier already exists, remove it.
-    if 'Subsurf_auto-drawing' in bpy.context.object.modifiers.keys():
-        bpy.ops.object.modifier_remove(modifier='Subsurf_auto-drawing')
-    
-    # Already add it at the end of modifeir stack.
-    bpy.ops.object.modifier_add(type='SUBSURF')
-    bpy.context.object.modifiers[-1].name = 'Subsurf_auto-drawing'
+def addModifiers(switch):
+    if switch == True:
+        # if subsurf modifier already exists, remove it.
+        if 'Subsurf_auto-drawing' not in bpy.context.object.modifiers.keys():
+            # Always add it at the end of modifeir stack.
+            bpy.ops.object.modifier_add(type='SUBSURF')
+            bpy.context.object.modifiers[-1].name = 'Subsurf_auto-drawing'
+    else:
+        # if subsurf modifier already exists, remove it.
+        if 'Subsurf_auto-drawing' in bpy.context.object.modifiers.keys():
+            bpy.ops.object.modifier_remove(modifier='Subsurf_auto-drawing')
+        
 
 # Sort order of faces for build modifier.
 def changeSort(sort_type=None):
