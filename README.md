@@ -74,6 +74,8 @@ For "ALONG_CURVE", select a curve lastly.
 * "NONE" = Draw object at the same time.
 * "SIMPLE" = Draw object in turn.
 * "ALONG_CURVE" = Draw objects along active curve's points.
+
+
 ---
 
 
