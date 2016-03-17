@@ -70,6 +70,7 @@ It affects only on MESH objects.
 
 #### Draw Objects In Turn
 Draw selected objects in turn.
+
 For "ALONG_CURVE", select a curve lastly.
 * "NONE" = Draw object at the same time.
 * "SIMPLE" = Draw object in turn.
